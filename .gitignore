@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# build artifacts
+/appvolume
+appvolume
+*.app/
+ui/AppVolume.app/
+*.o
+*.swiftmodule
+.build/
+DerivedData/
