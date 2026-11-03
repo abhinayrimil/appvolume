@@ -28,7 +28,11 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 </dict></plist>
 PLIST
 
-# ad-hoc sign so TCC can attribute the audio-capture consent to a stable identity
-codesign --force --sign - --identifier com.local.appvolume "$APP" >/dev/null 2>&1 || true
+# Sign with the hardened runtime so a dylib can't be injected (DYLD_INSERT_LIBRARIES)
+# to inherit the app's audio-capture TCC grant. Ad-hoc ("-") because no Developer ID
+# is set up: note its cdhash changes every rebuild, so macOS re-asks for permission
+# after each build. Set IDENTITY to a Developer ID cert for a persistent identity.
+IDENTITY="${IDENTITY:--}"
+codesign --force --options runtime --sign "$IDENTITY" --identifier com.local.appvolume "$APP"
 
 echo "built $PWD/$APP"
